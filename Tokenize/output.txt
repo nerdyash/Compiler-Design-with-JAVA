@@ -1,0 +1,50 @@
+// Output of Token.java
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\Tokenize>javac Token.java
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\Tokenize>java Token
+ID : x
+Other : =
+Other : +
+Number : 3.0
+Other : +
+Number : -2.0
+Other : +
+Number : 1.0
+Other : ;
+ID : y
+Other : =
+ID : x
+Other : ;
+ID : z
+Other : =
+ID : x
+Other : *
+Other : (
+Number : 2.0
+Other : +
+ID : y
+Other : )
+Other : +
+Other : (
+Other : (
+Other : (
+Number : 4099.0
+Other : )
+Other : )
+Other : )
+Other : ;
+Reserved : println
+Other : (
+ID : z
+Other : +
+ID : x
+Other : +
+Number : -2.0
+Other : )
+Other : ;
+Reserved : println
+Other : (
+Number : 4107.0
+Other : )
+Other : ;

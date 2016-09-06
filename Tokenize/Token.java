@@ -19,7 +19,7 @@ public class Token{
             break;
 
           case StreamTokenizer.TT_WORD:
-            if(str.sval.length() > 1){
+            if(str.sval.contains("println")){
               System.out.println("Reserved : "+ str.sval);
               break;
             }
@@ -28,7 +28,7 @@ public class Token{
             break;
 
           case StreamTokenizer.TT_NUMBER:
-            System.out.println("Unassigned : "+ str.nval);
+            System.out.println("Number : "+ str.nval);
             break;
 
           default:
