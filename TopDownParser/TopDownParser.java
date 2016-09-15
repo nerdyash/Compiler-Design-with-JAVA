@@ -1,3 +1,11 @@
+/*This compiler is for 
+S -> aSd
+S -> AB
+A -> cA
+A -> lambda
+B -> bB
+B -> c*/
+
 import java.util.*;
 
 class TopDownParser{
