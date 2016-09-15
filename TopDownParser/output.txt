@@ -1,0 +1,21 @@
+//Output : TopDownParser.java
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\TopDownParser>javac TopDownParser.java
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\TopDownParser>java TopDownParser acd#
+acd# : accept
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\TopDownParser>java TopDownParser acbcd#
+acbcd# : accept
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\TopDownParser>java TopDownParser acbbcd#
+acbbcd# : accept
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\TopDownParser>java TopDownParser ad#
+ad# : reject
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\TopDownParser>java TopDownParser ac#
+ac# : reject
+
+C:\Users\User\Desktop\SUNY_Yash\Suny sem 3\Compiler Design\Assignments\Compiler-Design-with-JAVA\TopDownParser>java TopDownParser accb#
+accb# : reject
