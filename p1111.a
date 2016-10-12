@@ -1,0 +1,15 @@
+	pc @m1
+^@m1:	dw "Enter integer\n"
+	sout
+	din
+	pc @m1
+	sout
+	din
+	add
+	pc @m2
+^@m2: 	dw "Sum = "
+	sout
+	dout
+	pc '\n'
+	aout
+	halt
