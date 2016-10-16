@@ -1,4 +1,8 @@
-/*This compiler is for 
+//Name : Yash Thakkar
+// Id  : N03312382
+// Assignment 2
+
+/*This compiler is for
 S -> aSd
 S -> AB
 A -> cA
