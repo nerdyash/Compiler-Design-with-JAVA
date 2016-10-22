@@ -1,22 +1,22 @@
-// Hand-written S2 compiler
+// Hand-written S1 compiler
 import java.io.*;
 import java.util.*;
 //======================================================
-class S2
-{
-  public static void main(String[] args) throws
+class S1
+{  
+  public static void main(String[] args) throws 
                                              IOException
   {
-    System.out.println("S2 compiler written by Yash Thakkar");
+    System.out.println("S1 compiler written by ...");
 
     if (args.length != 1)
     {
-      System.err.println("Wrong number cmd line args");
+      System.err.println("Wrong number cmd line args");  
       System.exit(1);
     }
 
     // set to true to debug token manager
-    boolean debug = true;
+    boolean debug = false;
 
     // build the input and output file names
     String inFileName = args[0] + ".s";
@@ -27,20 +27,20 @@ class S2
     PrintWriter outFile = new PrintWriter(outFileName);
 
     // identify compiler/author in the output file
-    outFile.println("; from S2 compiler written by Yash Thakkar");
+    outFile.println("; from S1 compiler written by ...");
 
     // construct objects that make up compiler
-    S2SymTab st = new S2SymTab();
-    S2TokenMgr tm =  new S2TokenMgr(inFile, outFile, debug);
-    S2CodeGen cg = new S2CodeGen(outFile, st);
-    S2Parser parser = new S2Parser(st, tm, cg);
+    S1SymTab st = new S1SymTab();
+    S1TokenMgr tm =  new S1TokenMgr(inFile, outFile, debug);
+    S1CodeGen cg = new S1CodeGen(outFile, st);
+    S1Parser parser = new S1Parser(st, tm, cg);
 
     // parse and translate
     try
     {
       parser.parse();
-    }
-    catch (RuntimeException e)
+    }      
+    catch (RuntimeException e) 
     {
       System.err.println(e.getMessage());
       outFile.println(e.getMessage());
@@ -50,55 +50,47 @@ class S2
 
     outFile.close();
   }
-}                                           // end of S2
+}                                           // end of S1
 //======================================================
-interface S2Constants
+interface S1Constants
 {
   // integers that identify token kinds
   int EOF = 0;
   int PRINTLN = 1;
-  int PRINT =2;
-  int UNSIGNED = 3;
-  int ID = 4;
-  int ASSIGN = 5;
-  int SEMICOLON = 6;
-  int LEFTCURLY = 7;
-  int RIGHTCURLY = 8;
-  int LEFTPAREN = 9;
-  int RIGHTPAREN = 10;
-  int PLUS = 11;
-  int MINUS = 12;
-  int TIMES = 13;
-  int DIV = 14;
-  int ERROR = 15;
+  int UNSIGNED = 2;
+  int ID = 3;
+  int ASSIGN = 4;
+  int SEMICOLON = 5;
+  int LEFTPAREN = 6;
+  int RIGHTPAREN = 7;
+  int PLUS = 8;
+  int MINUS = 9;
+  int TIMES = 10;
+  int ERROR = 11;
 
   // tokenImage provides string for each token kind
-  String[] tokenImage =
+  String[] tokenImage = 
   {
     "<EOF>",
     "\"println\"",
-    "\"print\"",
     "<UNSIGNED>",
     "<ID>",
     "\"=\"",
     "\";\"",
-    "\"{\"",
-    "\"}\"",
     "\"(\"",
     "\")\"",
     "\"+\"",
     "\"-\"",
     "\"*\"",
-    "\"/\"",
     "<ERROR>"
   };
-}                                  // end of S2Constants
+}                                  // end of S1Constants
 //======================================================
-class S2SymTab
+class S1SymTab
 {
   private ArrayList<String> symbol;
   //-----------------------------------------
-  public S2SymTab()
+  public S1SymTab()
   {
     symbol = new ArrayList<String>();
   }
@@ -107,8 +99,8 @@ class S2SymTab
   {
     int index = symbol.indexOf(s);
 
-    // if s is not in symbol, then add it
-    if (index < 0)
+    // if s is not in symbol, then add it 
+    if (index < 0) 
       symbol.add(s);
   }
   //-----------------------------------------
@@ -121,11 +113,11 @@ class S2SymTab
   {
     return symbol.size();
   }
-}                                     // end of S2SymTab
+}                                     // end of S1SymTab
 //======================================================
-class S2TokenMgr implements S2Constants
+class S1TokenMgr implements S1Constants
 {
-  private Scanner inFile;
+  private Scanner inFile;          
   private PrintWriter outFile;
   private boolean debug;
   private char currentChar;
@@ -135,7 +127,7 @@ class S2TokenMgr implements S2Constants
   private Token token;         // holds 1 token
   private StringBuffer buffer; // token image built here
   //-----------------------------------------
-  public S2TokenMgr(Scanner inFile,
+  public S1TokenMgr(Scanner inFile, 
                     PrintWriter outFile, boolean debug)
   {
     this.inFile = inFile;
@@ -153,7 +145,7 @@ class S2TokenMgr implements S2Constants
       getNextChar();
 
     // construct token to be returned to parser
-    token = new Token();
+    token = new Token();   
     token.next = null;
 
     // save start-of-token position
@@ -170,12 +162,12 @@ class S2TokenMgr implements S2Constants
     }
 
     else  // check for unsigned int
-    if (Character.isDigit(currentChar))
+    if (Character.isDigit(currentChar)) 
     {
       buffer.setLength(0);  // clear buffer
       do  // build token image in buffer
       {
-        buffer.append(currentChar);
+        buffer.append(currentChar); 
         token.endLine = currentLineNumber;
         token.endColumn = currentColumnNumber;
         getNextChar();
@@ -186,8 +178,8 @@ class S2TokenMgr implements S2Constants
     }
 
     else  // check for identifier
-    if (Character.isLetter(currentChar))
-    {
+    if (Character.isLetter(currentChar)) 
+    { 
       buffer.setLength(0);  // clear buffer
       do  // build token image in buffer
       {
@@ -202,49 +194,38 @@ class S2TokenMgr implements S2Constants
       // check if keyword
       if (token.image.equals("println"))
         token.kind = PRINTLN;
-      else if (token.image.equals("print"))
-        token.kind = PRINT;
       else  // not a keyword so kind is ID
         token.kind = ID;
     }
 
     else  // process single-character token
-    {
+    {  
       switch(currentChar)
       {
         case '=':
           token.kind = ASSIGN;
-          break;
+          break;                               
         case ';':
           token.kind = SEMICOLON;
-          break;
-        case '{':
-          token.kind = LEFTCURLY;
-          break;
-        case '}':
-          token.kind = RIGHTCURLY;
-          break;
+          break;                               
         case '(':
           token.kind = LEFTPAREN;
-          break;
+          break;                               
         case ')':
           token.kind = RIGHTPAREN;
-          break;
+          break;                               
         case '+':
           token.kind = PLUS;
-          break;
+          break;                               
         case '-':
           token.kind = MINUS;
-          break;
+          break;                               
         case '*':
           token.kind = TIMES;
-          break;
-        case '/':
-          token.kind = DIV;
-          break;
+          break;                               
         default:
           token.kind = ERROR;
-          break;
+          break;                               
       }
 
       // save currentChar as String in token.image
@@ -261,11 +242,11 @@ class S2TokenMgr implements S2Constants
     if (debug)
       outFile.printf(
         "; kd=%3d bL=%3d bC=%3d eL=%3d eC=%3d im=%s%n",
-        token.kind, token.beginLine, token.beginColumn,
+        token.kind, token.beginLine, token.beginColumn, 
         token.endLine, token.endColumn, token.image);
 
     return token;     // return token to parser
-  }
+  }     
   //-----------------------------------------
   private void getNextChar()
   {
@@ -281,8 +262,8 @@ class S2TokenMgr implements S2Constants
         outFile.println("; " + inputLine);
         inputLine = inputLine + "\n";   // mark line end
         currentColumnNumber = 0;
-        currentLineNumber++;
-      }
+        currentLineNumber++;   
+      }                                
       else  // at end of file
       {
          currentChar = EOF;
@@ -291,32 +272,29 @@ class S2TokenMgr implements S2Constants
     }
 
     // get next char from inputLine
-    currentChar =
+    currentChar = 
                 inputLine.charAt(currentColumnNumber++);
 
     // in S2, test for single-line comment goes here
-    if(currentChar == '/' && inputLine.charAt(currentColumnNumber) == '/'){
-      currentChar = '\n';
-    }
   }
-}                                   // end of S2TokenMgr
+}                                   // end of S1TokenMgr
 //======================================================
-class S2Parser implements S2Constants
+class S1Parser implements S1Constants
 {
-  private S2SymTab st;
-  private S2TokenMgr tm;
-  private S2CodeGen cg;
+  private S1SymTab st;
+  private S1TokenMgr tm;
+  private S1CodeGen cg;
   private Token currentToken;
-  private Token previousToken;
+  private Token previousToken; 
   //-----------------------------------------
-  public S2Parser(S2SymTab st, S2TokenMgr tm,
-                                           S2CodeGen cg)
+  public S1Parser(S1SymTab st, S1TokenMgr tm, 
+                                           S1CodeGen cg)
   {
     this.st = st;
     this.tm = tm;
-    this.cg = cg;
+    this.cg = cg;   
     // prime currentToken with first token
-    currentToken = tm.getNextToken();
+    currentToken = tm.getNextToken(); 
     previousToken = null;
   }
   //-----------------------------------------
@@ -326,11 +304,11 @@ class S2Parser implements S2Constants
   //
   private RuntimeException genEx(String errorMessage)
   {
-    return new RuntimeException("Encountered \"" +
-      currentToken.image + "\" on line " +
-      currentToken.beginLine + ", column " +
+    return new RuntimeException("Encountered \"" + 
+      currentToken.image + "\" on line " + 
+      currentToken.beginLine + ", column " + 
       currentToken.beginColumn + "." +
-      System.getProperty("line.separator") +
+      System.getProperty("line.separator") + 
       errorMessage);
   }
   //-----------------------------------------
@@ -338,21 +316,21 @@ class S2Parser implements S2Constants
   //
   private void advance()
   {
-    previousToken = currentToken;
+    previousToken = currentToken; 
 
     // If next token is on token list, advance to it.
     if (currentToken.next != null)
       currentToken = currentToken.next;
 
-    // Otherwise, get next token from token mgr and
+    // Otherwise, get next token from token mgr and 
     // put it on the list.
     else
-      currentToken =
+      currentToken = 
                   currentToken.next = tm.getNextToken();
   }
   //-----------------------------------------
   // getToken(i) returns ith token without advancing
-  // in token stream.  getToken(0) returns
+  // in token stream.  getToken(0) returns 
   // previousToken.  getToken(1) returns currentToken.
   // getToken(2) returns next token, and so on.
   //
@@ -368,7 +346,7 @@ class S2Parser implements S2Constants
       if (t.next != null)
         t = t.next;
 
-      // Otherwise, get next token from token mgr and
+      // Otherwise, get next token from token mgr and 
       // put it on the list.
       else
         t = t.next = tm.getNextToken();
@@ -407,14 +385,10 @@ class S2Parser implements S2Constants
     {
       case ID:
       case PRINTLN:
-      case PRINT:
-      case SEMICOLON:
-      case LEFTCURLY:
         statement();
         statementList();
         break;
       case EOF:
-      case RIGHTCURLY:
         ;
         break;
       default:
@@ -426,22 +400,13 @@ class S2Parser implements S2Constants
   {
     switch(currentToken.kind)
     {
-      case ID:
-        assignmentStatement();
+      case ID: 
+        assignmentStatement(); 
         break;
-      case PRINTLN:
-        printlnStatement();
+      case PRINTLN:    
+        printlnStatement(); 
         break;
-      case PRINT:
-        printStatement();
-        break;
-      case SEMICOLON:
-        nullStatement();
-        break;
-      case LEFTCURLY:
-        compoundStatement();
-        break;
-      default:
+      default:         
         throw genEx("Expecting statement");
     }
   }
@@ -472,27 +437,6 @@ class S2Parser implements S2Constants
     consume(SEMICOLON);
   }
   //-----------------------------------------
-
-  private void printStatement(){
-    consume(PRINT);
-    consume(LEFTPAREN);
-    expr();
-    cg.emitInstruction("dout");
-    consume(RIGHTPAREN);
-    consume(SEMICOLON);
-  }
-  //----------------------------------------
-
-  private void nullStatement(){
-    consume(SEMICOLON);
-  }
-  //-----------------------------------------
-  private void compoundStatement(){
-    consume(LEFTCURLY);
-    statementList();
-    consume(RIGHTCURLY);
-  }
-  //----------------------------------------
   private void expr()
   {
     term();
@@ -509,14 +453,6 @@ class S2Parser implements S2Constants
         cg.emitInstruction("add");
         termList();
         break;
-
-      case MINUS:
-        consume(MINUS);
-        term();
-        cg.emitInstruction("sub");
-        termList();
-        break;
-
       case RIGHTPAREN:
       case SEMICOLON:
         ;
@@ -542,16 +478,7 @@ class S2Parser implements S2Constants
         cg.emitInstruction("mult");
         factorList();
         break;
-
-      case DIV:
-        consume(DIV);
-        factor();
-        cg.emitInstruction("div");
-        factorList();
-        break;
-
       case PLUS:
-      case MINUS:
       case RIGHTPAREN:
       case SEMICOLON:
         ;
@@ -562,7 +489,7 @@ class S2Parser implements S2Constants
   }
   //-----------------------------------------
   private void factor()
-  {
+  {  
     Token t;
 
     switch(currentToken.kind)
@@ -595,20 +522,18 @@ class S2Parser implements S2Constants
         expr();
         consume(RIGHTPAREN);
         break;
-
-
       default:
         throw genEx("Expecting factor");
     }
   }
-}                                     // end of S2Parser
+}                                     // end of S1Parser
 //======================================================
-class S2CodeGen
+class S1CodeGen
 {
   private PrintWriter outFile;
-  private S2SymTab st;
+  private S1SymTab st;
   //-----------------------------------------
-  public S2CodeGen(PrintWriter outFile, S2SymTab st)
+  public S1CodeGen(PrintWriter outFile, S1SymTab st)
   {
     this.outFile = outFile;
     this.st = st;
@@ -616,16 +541,16 @@ class S2CodeGen
   //-----------------------------------------
   public void emitInstruction(String op)
   {
-    outFile.printf("          %-4s%n", op);
+    outFile.printf("          %-4s%n", op); 
   }
   //-----------------------------------------
   public void emitInstruction(String op, String opnd)
-  {
-    outFile.printf("          %-4s      %s%n", op,opnd);
+  {           
+    outFile.printf("          %-4s      %s%n", op,opnd); 
   }
   //-----------------------------------------
   private void emitdw(String label, String value)
-  {
+  {           
     outFile.printf(
              "%-9s dw        %s%n", label + ":", value);
   }
@@ -637,7 +562,7 @@ class S2CodeGen
 
     int size = st.getSize();
     // emit dw for each symbol in the symbol table
-    for (int i=0; i < size; i++)
+    for (int i=0; i < size; i++) 
       emitdw(st.getSymbol(i), "0");
   }
-}                                    // end of S2CodeGen
+}                                    // end of S1CodeGen
